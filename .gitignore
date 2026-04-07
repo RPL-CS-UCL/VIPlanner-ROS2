@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model weights — large binary files, never commit
+models/**/*.pth
+models/**/*.pkl
+models/**/*.pt
+models/**/TrainCfg.yaml
+
+# Keep directory structure
+!models/**/.gitkeep
+!models/README.md
