@@ -13,8 +13,8 @@ viplanner_node:
 
     # network model paths (absolute paths inside container)
     model_save: "/home/developer/ros_ws/src/local_planner/viplanner_ros2/models/plannernet"
-    m2f_cfg_file: "/home/developer/ros_ws/src/local_planner/viplanner_ros2/models/m2f_model/coco/panoptic/maskformer2_R50_bs16_50ep.yaml"
-    m2f_model_path: "/home/developer/ros_ws/src/local_planner/viplanner_ros2/models/m2f_model/coco/panoptic/model_final_94dc52.pkl"
+    m2f_cfg_file: "/home/developer/ros_ws/src/local_planner/viplanner_ros2/models/m2f_model/mmdet/mask2former_r50_8xb2-lsj-50e_coco-panoptic.py"
+    m2f_model_path: "/home/developer/ros_ws/src/local_planner/viplanner_ros2/models/m2f_model/mmdet/mask2former_r50_8xb2-lsj-50e_coco-panoptic_20230118_125535-54df384a.pth"
 
     # ROS topics
     depth_topic: "/rgbd_camera/depth/image"

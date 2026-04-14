@@ -37,7 +37,6 @@ from visualization_msgs.msg import Marker
 
 # VIPlanner
 from .vip_inference import VIPlannerInference
-from .m2f_inference import Mask2FormerInference
 
 warnings.filterwarnings("ignore")
 
@@ -96,6 +95,12 @@ class VIPlannerNode(Node):
         self.vip_algo = VIPlannerInference(self.cfg)
 
         if self.vip_algo.train_cfg.sem:
+            try:
+                from .m2f_inference import Mask2FormerInference
+            except ImportError as exc:
+                raise RuntimeError(
+                    "Semantic mode requires the mmdet/mmcv stack to be installed in the image."
+                ) from exc
             # init semantic network
             self.m2f_inference = Mask2FormerInference(
                 config_file=self.cfg.m2f_config_path,
