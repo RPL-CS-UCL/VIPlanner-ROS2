@@ -11,8 +11,8 @@ import numpy as np
 from mmdet.apis import inference_detector, init_detector
 from mmdet.evaluation import INSTANCE_OFFSET
 
-from viplanner.config.coco_sem_meta import get_class_for_id_mmdet
-from viplanner.config.viplanner_sem_meta import VIPlannerSemMetaHandler
+from viplanner_ros2.config.coco_sem_meta import get_class_for_id_mmdet
+from viplanner_ros2.config.viplanner_sem_meta import VIPlannerSemMetaHandler
 
 logger = logging.getLogger(__name__)
 

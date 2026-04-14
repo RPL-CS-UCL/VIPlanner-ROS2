@@ -10,9 +10,9 @@ import numpy as np
 import torch
 import torchvision.transforms as transforms
 
-from viplanner.config.learning_cfg import TrainCfg
-from viplanner.plannernet import AutoEncoder, DualAutoEncoder, get_m2f_cfg
-from viplanner.traj_cost_opt.traj_opt import TrajOpt
+from viplanner_ros2.config.learning_cfg import TrainCfg
+from viplanner_ros2.plannernet import AutoEncoder, DualAutoEncoder, get_m2f_cfg
+from viplanner_ros2.traj_cost_opt.traj_opt import TrajOpt
 
 torch.set_default_dtype(torch.float32)
 
