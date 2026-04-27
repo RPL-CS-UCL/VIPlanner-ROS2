@@ -23,6 +23,8 @@ from rclpy.node import Node
 from rclpy.duration import Duration
 from rclpy.time import Time
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
+from rclpy.executors import MultiThreadedExecutor
+
 
 import scipy.spatial.transform as stf
 import tf2_ros
@@ -842,8 +844,10 @@ class VIPlannerNode(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = VIPlannerNode()
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
     try:
-        rclpy.spin(node)
+        executor.spin()
     except KeyboardInterrupt:
         pass
     finally:
