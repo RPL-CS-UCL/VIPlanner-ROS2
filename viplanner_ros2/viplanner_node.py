@@ -90,9 +90,19 @@ class VIPlannerNode(Node):
 
         # ── Read parameters into a simple namespace ─────────────────
         self.cfg = self._read_params()
+        self._last_wait_log_time = 0.0
+        self._log_effective_config()
 
         # init planner algo class
         self.vip_algo = VIPlannerInference(self.cfg)
+        self.get_logger().info(
+            "Model mode sem=%s rgb=%s device=%s"
+            % (
+                self.vip_algo.train_cfg.sem,
+                self.vip_algo.train_cfg.rgb,
+                getattr(self.vip_algo, "_device", "unknown"),
+            )
+        )
 
         if self.vip_algo.train_cfg.sem:
             try:
@@ -262,6 +272,46 @@ class VIPlannerNode(Node):
 
         return cfg
 
+    def _log_effective_config(self):
+        self.get_logger().info(
+            "Configured topics depth=%s depth_info=%s rgb=%s rgb_info=%s goal=%s path=%s compressed=%s"
+            % (
+                self.cfg.depth_topic,
+                self.cfg.depth_info_topic,
+                self.cfg.rgb_topic,
+                self.cfg.rgb_info_topic,
+                self.cfg.goal_topic,
+                self.cfg.path_topic,
+                self.cfg.compressed,
+            )
+        )
+        self.get_logger().info(
+            "Configured frames robot_id=%s world_id=%s mount_cam_frame=%s"
+            % (
+                self.cfg.robot_id,
+                self.cfg.world_id,
+                self.cfg.mount_cam_frame,
+            )
+        )
+
+    def _log_waiting_state(self):
+        now = time.time()
+        missing = []
+        if not self.ready_for_planning_depth:
+            missing.append(f"depth image on {self.cfg.depth_topic}")
+        if not self.ready_for_planning_rgb_sem:
+            missing.append(f"rgb/sem image on {self.cfg.rgb_topic}")
+        if not self.is_goal_init:
+            missing.append(f"goal on {self.cfg.goal_topic}")
+        if self.is_goal_init and not self.goal_cam_frame_set:
+            missing.append("goal-to-camera transform")
+        if missing:
+            self.get_logger().warning(
+                "Waiting for planner inputs: %s" % ", ".join(missing),
+                throttle_duration_sec=2.0,
+            )
+        self._last_wait_log_time = now
+
     # ─── Main planning loop (called by timer) ──────────────────────
 
     def spin_once(self):
@@ -271,6 +321,7 @@ class VIPlannerNode(Node):
             self.is_goal_init,
             self.goal_cam_frame_set,
         )):
+            self._log_waiting_state()
             return
 
         # copy current data

@@ -8,6 +8,7 @@
 
 import logging
 import numpy as np
+import torch
 from mmdet.apis import inference_detector, init_detector
 from mmdet.evaluation import INSTANCE_OFFSET
 
@@ -28,7 +29,9 @@ class Mask2FormerInference:
         checkpoint_file="model_final.pth",
     ) -> None:
         # Build the model from a config file and a checkpoint file
-        self.model = init_detector(config_file, checkpoint_file, device="cuda:0")
+        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        self.model = init_detector(config_file, checkpoint_file, device=self.device)
+        logger.info("Mask2Former initialized on device=%s", self.device)
 
         # mapping from coco class id to viplanner class id and color
         viplanner_meta = VIPlannerSemMetaHandler()

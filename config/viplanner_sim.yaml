@@ -1,0 +1,16 @@
+# VIPlanner ROS2 simulation overrides for RoboHike Gazebo stack.
+
+viplanner_node:
+  ros__parameters:
+    # Topic contract: gazebo camera + existing planner/follower pipeline
+    depth_topic: "/camera_rgb/depth/image_raw"
+    depth_info_topic: "/camera_rgb/depth/camera_info"
+    rgb_topic: "/camera_rgb/image_raw"
+    rgb_info_topic: "/camera_rgb/camera_info"
+    goal_topic: "/way_point"
+    path_topic: "/path"
+    compressed: false
+
+    # Frame contract: align with moveSimVehicle + gazebo_gt defaults
+    robot_id: "vehicle"
+    world_id: "map"
