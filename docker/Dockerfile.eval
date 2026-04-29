@@ -5,14 +5,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install --no-cache-dir \
+    "numpy<2" \
+    "mmengine>=0.7.3" \
+    "mmdet>=3.0.0,<3.4.0" \
+    opencv-python-headless \
+    Pillow \
+    matplotlib
 
-RUN pip install --no-cache-dir "numpy<2" "mmengine>=0.7.3"
-# RUN pip install --no-cache-dir "mmcv==2.1.0" \
-#     -f https://download.openmmlab.com/mmcv/dist/cu121/torch2.1/index.html
+RUN pip install --no-cache-dir \
+    git+https://github.com/cocodataset/panopticapi.git
+
 # Downloading time is a bit too long for some reason, so I manually download it and install here
 COPY mmcv-2.1.0-cp310-cp310-manylinux1_x86_64.whl /tmp/
 RUN pip install /tmp/mmcv-2.1.0-cp310-cp310-manylinux1_x86_64.whl
-RUN pip install --no-cache-dir "mmdet>=3.0.0,<3.4.0"
-RUN pip install --no-cache-dir opencv-python-headless Pillow matplotlib
 
 WORKDIR /workspace
