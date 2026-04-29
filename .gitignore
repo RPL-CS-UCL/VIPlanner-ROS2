@@ -12,3 +12,8 @@ models/**/TrainCfg.yaml
 # Keep directory structure
 !models/**/.gitkeep
 !models/README.md
+
+experiments/*/inputs/
+experiments/*/outputs/
+
+.history/
