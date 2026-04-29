@@ -52,8 +52,9 @@ def lookup_present_classes(mask):
 
     return present
 
-def make_dynamic_legend(present_classes, width, height=60):
-    legend = np.ones((height, width, 3), dtype=np.uint8) * 255 
+def make_dynamic_legend(present_classes, height):
+    legend_w = 280
+    legend = np.ones((height, legend_w, 3), dtype=np.uint8) * 255  # 白底
     
     if not present_classes:
         return legend
@@ -61,40 +62,19 @@ def make_dynamic_legend(present_classes, width, height=60):
     present_classes = sorted(present_classes, key=lambda x: x[2])
     
     n = len(present_classes)
-    cell_w = width // n
+    row_h = 30 
     
-    for i, (color_bgr, name, loss) in enumerate(present_classes):
-        x0 = i * cell_w
-
-        # color block
-        cv2.rectangle(legend, (x0 + 10, 15), (x0 + 50, height - 15), color_bgr, -1)
-        cv2.rectangle(legend, (x0 + 10, 15), (x0 + 50, height - 15), (0, 0, 0), 1)
+    for i, (color_rgb, name, loss) in enumerate(present_classes):
+        y0 = i * row_h
                 
-        # 文字：name + loss
-        text = f"{name} ({loss})"
-        cv2.putText(legend, text, (x0 + 60, height // 2 + 5),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 1)
+        cv2.rectangle(legend, (10, y0 + 5), (50, y0 + row_h - 5), color_rgb, -1)
+        cv2.rectangle(legend, (10, y0 + 5), (50, y0 + row_h - 5), (0, 0, 0), 1)
+        
+        text = f"{name} (loss={loss})"
+        cv2.putText(legend, text, (60, y0 + row_h // 2 + 5),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 0), 1)
     
     return legend
-
-def overlay_legend(canvas_bgr, legend, position="top_right", margin=10, alpha=0.85):
-    H, W = canvas_bgr.shape[:2]
-    lh, lw = legend.shape[:2]
-
-    if position == "top_right":
-        x0, y0 = W - lw - margin, margin
-    elif position == "top_left":
-        x0, y0 = margin, margin
-    elif position == "bottom_right":
-        x0, y0 = W - lw - margin, H - lh - margin
-    elif position == "bottom_left":
-        x0, y0 = margin, H - lh - margin
-    
-    roi = canvas_bgr[y0:y0+lh, x0:x0+lw]
-    blended = cv2.addWeighted(roi, 1-alpha, legend, alpha, 0)
-    canvas_bgr[y0:y0+lh, x0:x0+lw] = blended
-
-    return canvas_bgr
 
 def main():
     
@@ -123,13 +103,11 @@ def main():
         present_classes = lookup_present_classes(mask)
         loss_mask = remap_mask(mask)
         overlay = cv2.addWeighted(img, 0.5, mask, 0.5, 0)
-        overlay_loss = cv2.addWeighted(img, 0.5, loss_mask, 0.5, 0)        
+        overlay_loss = cv2.addWeighted(img, 0.5, loss_mask, 0.5, 0)
+        
+        legend = make_dynamic_legend(present_classes, img.shape[0])
 
-        top_row = np.hstack([img, mask, overlay, overlay_loss])
-        legend = make_dynamic_legend(present_classes, width=top_row.shape[1], height=60)
-
-        combined = np.vstack([top_row, legend])
-
+        combined = np.hstack([img, mask, overlay, overlay_loss, legend])
         cv2.imwrite(os.path.join(output_dir, fname), combined)
 
         print(f"done: {fname}")
