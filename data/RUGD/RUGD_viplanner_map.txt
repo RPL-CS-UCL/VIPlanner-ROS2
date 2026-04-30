@@ -1,0 +1,26 @@
+RUGD class	ViPlanner class	ViPlanner loss	我的理由
+0 void	static	2.0	未定义区域当障碍
+1 dirt	sidewalk	0.0	机器人最该走的——土路
+2 sand	sand	0.0	直接对应
+3 grass	terrain	0.5 	草地能走但优先级低
+4 tree	vegetation	2.0	树是障碍
+5 pole	pole	2.0	直接对应
+6 water	water_surface	2.0	直接对应
+7 sky	sky	2.0	直接对应
+8 vehicle	vehicle	2.0	直接对应
+9 container/generic-object	static	2.0	杂物当障碍
+10 asphalt	road	1.5	沥青路
+11 gravel	gravel	0.0	直接对应
+12 building	building	2.0	直接对应
+13 mulch	terrain	0.5	覆盖物（树皮屑），能走
+14 rock-bed	static	1.5	大块岩石区
+15 log	static	2.0	倒木当障碍
+16 bicycle	bicycle	2.0	直接对应
+17 person	person	2.0	直接对应
+18 fence	fence	2.0	直接对应
+19 bush	vegetation	2.0	灌木当障碍
+20 sign	traffic_sign	2.0	直接对应
+21 rock	static	2.0	石头当障碍
+22 bridge	bridge	2.0	直接对应
+23 concrete	road	1.5	水泥路
+24 picnic-table	furniture	2.0	桌子当家具
