@@ -17,3 +17,5 @@ experiments/*/inputs/
 experiments/*/outputs/
 
 .history/
+
+data/
