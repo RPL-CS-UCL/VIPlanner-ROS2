@@ -17,5 +17,10 @@ experiments/*/inputs/
 experiments/*/outputs/
 
 .history/
+.vscode/
 
 data/
+
+build/
+install/
+log/

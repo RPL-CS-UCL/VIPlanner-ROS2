@@ -6,19 +6,19 @@
 
 ## Loss 含义
 
-| 常量 | 值 | 含义 |
+| Constant | Value | Meaning |
 |---|---|---|
-| `TRAVERSABLE_INTENDED_LOSS` | 0.0 | 该走的路面 (人行道/楼梯) |
-| `TRAVERSABLE_UNINTENDED_LOSS` | 0.5 | 能走但非首选 (沙砾/沙地/雪) |
-| `TERRAIN_LOSS` | 1.0 | 自然地形 (草地/土地) |
-| `ROAD_LOSS` | 1.5 | 机动车道 (不优先) |
-| `OBSTACLE_LOSS` | 2.0 | 障碍物 |
+| `TRAVERSABLE_INTENDED_LOSS` | 0.0 | first priority (road, flat terrain etc.) |
+| `TRAVERSABLE_UNINTENDED_LOSS` | 0.5 | could walk on but not preferred (gravel/sand/snow) |
+| `TERRAIN_LOSS` | 1.0 | natural terrains (grassland/mud land) |
+| `ROAD_LOSS` | 1.5 | vehicle road (not good) |
+| `OBSTACLE_LOSS` | 2.0 | obstacles |
 
-## 可通行类 (loss < 2.0)
+## Traversable (loss < 2.0)
 
-| ViPlanner 类 | Loss | Ground? | COCO 来源类 | 备注 |
+| ViPlanner Category | Loss | Ground? | COCO Category | Note |
 |---|---|---|---|---|
-| `sidewalk` | 0.0 | ✓ | `pavement-merged` | 人行道 |
+| `sidewalk` | 0.0 | ✓ | `pavement-merged` | pedastrian walk |
 | `floor` | 0.0 | ✓ | `floor-other-merged`, `floor-wood`, `platform`, `playingfield`, `rug-merged` | 室内地面 |
 | `stairs` | 0.0 | ✓ | `stairs` | 楼梯 |
 | `gravel` | 0.5 | ✓ | `gravel` | 沙砾 |

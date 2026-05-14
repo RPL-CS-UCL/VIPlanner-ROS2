@@ -353,7 +353,9 @@ if __name__ == "__main__":
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
     plt.tight_layout()
-    plt.savefig("/home/{$USER}/viplanner_semantic_classes_color_scheme.png", dpi=300)
+    # plt.savefig("/home/{$USER}/viplanner_semantic_classes_color_scheme.png", dpi=300)
+    plt.savefig("/workspace/experiments/01_semantic_sanity_check/legend.png", dpi=300)
+
     # Show the plot
     plt.show()
 

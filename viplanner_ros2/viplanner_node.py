@@ -481,13 +481,16 @@ class VIPlannerNode(Node):
     # ─── PATH PUB, GOAL and ODOM SUB and FEAR DETECTION ─────────────
 
     def pubPath(self, waypoints, is_goal_init=True):
+        if not is_goal_init:
+            # empty path crashes CMU pathfollower
+            return
+        
         poses = []
-        if is_goal_init:
-            for p in waypoints:
-                pose = PoseStamped()
-                pose.pose.position.x = float(p[0])
-                pose.pose.position.y = float(p[1])
-                poses.append(pose)
+        for p in waypoints:
+            pose = PoseStamped()
+            pose.pose.position.x = float(p[0])
+            pose.pose.position.y = float(p[1])
+            poses.append(pose)
 
         # Wait for the transform from base frame to odom frame
         trans = None
@@ -642,11 +645,12 @@ class VIPlannerNode(Node):
             tf2_ros.LookupException,
             tf2_ros.ConnectivityException,
             tf2_ros.ExtrapolationException,
-        ):
+        )as e:
             self.get_logger().error(
-                f"Pose Fail to transfer {frame_id} into {target_frame_id} frame."
+                f"Pose Fail to transfer {frame_id} into {target_frame_id} frame: "
+                f"{type(e).__name__}: {e}"
             )
-            return False, np.zeros(7)
+        return False, np.zeros(7)
 
     def imageCallback(self, rgb_msg: Image):
         self.get_logger().debug(f"Received rgb image {rgb_msg.header.frame_id}")
@@ -668,6 +672,21 @@ class VIPlannerNode(Node):
 
         self.sem_rgb_odom = pose
         self.sem_rgb_img = image
+        self.ready_for_planning_rgb_sem = True
+
+        # publish the semantic image
+        if self.vip_algo.train_cfg.sem:
+            image_pub = cv2.resize(image, (480, 360))
+            image_pub = cv2.cvtColor(image_pub, cv2.COLOR_RGB2BGR)
+            success, compressed_image = cv2.imencode(".jpg", image_pub)
+            if not success:
+                self.get_logger().error("Failed to compress semantic image")
+                return
+            sem_msg = CompressedImage()
+            sem_msg.header = rgb_msg.header
+            sem_msg.format = "jpeg"
+            sem_msg.data = compressed_image.tobytes()
+            self.m2f_pub.publish(sem_msg)
 
     def imageCallbackCompressed(self, rgb_msg: CompressedImage):
         self.get_logger().debug(

@@ -29,6 +29,7 @@ Typical Failure Cases:
 | `sidewalk` | 0.0 | ✓ | `pavement-merged` | 人行道 |
 | `floor` | 0.0 | ✓ | `floor-other-merged`, `floor-wood`, `platform`, `playingfield`, `rug-merged` | 室内地面 |
 | `stairs` | 0.0 | ✓ | `stairs` | 楼梯 **UNTESTED**|
+
 | `gravel` | 0.5 | ✓ | `gravel` | 沙砾 (**UNCHANGED**)|
 | `grass` | 0.5 | ✓ | `grass-merged` | **草地 (NEW)** |
 | `sand` | 0.5 | ✓ | `sand` | 沙地 **UNSEEN**|
